@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 var _ = require("underscore"),
-	sequest = require("sequest"),
 	program = require("commander"),
 	colors = require("colors/safe");
 
@@ -9,8 +8,10 @@ var _ = require("underscore"),
 colors.enabled = true;
 
 // commands
-var init = require("./command/init");
+var init = require("./command/init"),
+	run = require("./command/run");
 
+// init command
 program
   	.command("init")
   	.description("Initialize project configuration file")
@@ -19,5 +20,11 @@ program
 	.option("-h, --host [host]", "Host")
 	.option("-port, --port [port]", "Port")
   	.action(_.partial(init, colors));
+
+// run command
+program
+  	.command("run")
+  	.description("Run project on edison")
+  	.action(_.partial(run, colors));
 
 program.parse(process.argv);

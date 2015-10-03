@@ -1,16 +1,15 @@
-var jsonfile = require('jsonfile');
+var jsonfile = require("jsonfile"),
+	config = require("../config/config");
 
-jsonfile.spaces = 4;
+jsonfile.spaces = config.JSON_FILE_SPACES;
 
 module.exports = function(colors, options) {
 	options = options || {};
 	
-	var username = options.username || "",
-		password = options.password || "",
-		host = options.host || "localhost",
-		port = options.port || "";
-	
-	var file = "edison_config.json";
+	var username = options.username || config.USERNAME,
+		password = options.password || config.PASSWORD,
+		host = options.host || config.HOST,
+		port = options.port || config.PORT;
 	
 	var settings = {
 		username: username,
@@ -19,7 +18,7 @@ module.exports = function(colors, options) {
 		port: port
 	};
 
-	jsonfile.writeFile(file, settings, function (err) {
+	jsonfile.writeFile(config.CONFIG_FILE, settings, function (err) {
 	  err 
 		? console.error(colors.red(err)) 
 	  	: console.log(colors.green("Config file created successfully."));
