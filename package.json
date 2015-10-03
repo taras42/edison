@@ -1,20 +1,24 @@
 {
-  "name": "edison",
-  "version": "0.0.0",
-  "description": "Intel edison projects setup tool",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git"
-  },
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": ""
-  },
-  "homepage": "",
-  "dependencies": {
-  }
+	"name": "edison",
+	"version": "0.0.0",
+	"description": "Intel edison projects setup tool",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git"
+	},
+	"preferGlobal": "true",
+	"bin": { 
+		"edison": "edison.js" 
+	},
+	"author": "",
+	"license": "MIT",
+	"bugs": {
+		"url": ""
+	},
+	"homepage": "",
+	"dependencies": {
+		"sequest": "^0.9.0"
+	}
 }
