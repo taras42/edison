@@ -1,0 +1,1 @@
+# Intel Edison projects setup tool
