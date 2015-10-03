@@ -1,6 +1,7 @@
 var sequest = require("sequest"),
 	jsonfile = require("jsonfile"),
-	config = require("../config/config");
+	config = require("../config/config"),
+	fs = require("fs");
 
 module.exports = function(colors, options) {
 	options = options || {};
@@ -17,25 +18,15 @@ module.exports = function(colors, options) {
 			});
 			
 			// relatively /home/root
-			// spagetti, refactor needed
 			seq("cd " + settings.deployDirectory, function(err, stdout) {
 				if(err) {
 					console.log(colors.red(err));
 				} else {
-					seq("cd " + settings.projectName, function(err, stdout) {
-						if(err) {
-							console.log(colors.red(err));
-						} else {
-							seq("node " + settings.mainFile, function(err, stdout) {
-								if(err) {
-									console.log(colors.red(err));	
-								} else {
-									console.log(colors.green("Project started."));
-									console.log(colors.green(stdout));
-									seq.end(); // terminate?
-								}
-							});
-						}
+					var writer = seq.put('./p.json');
+					fs.createReadStream(process.cwd() + '/package.json').pipe(writer);
+					writer.on('close', function () {
+						console.log(colors.green("Deploy successful."));
+						seq.end();
 					});
 				}
 			});

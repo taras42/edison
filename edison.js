@@ -9,7 +9,8 @@ colors.enabled = true;
 
 // commands
 var init = require("./command/init"),
-	run = require("./command/run");
+	run = require("./command/run"),
+	deploy = require("./command/deploy");
 
 // init command
 program
@@ -20,7 +21,8 @@ program
 	.option("-h, --host [host]", "Host")
 	.option("-port, --port [port]", "Port")
 	.option("-pN, --projectName [projectName]", "Project name")
-	.option("-m, --main [main]", "Main file")
+	.option("-mF, --mainFile [mainFile]", "Main file")
+	.option("-dD, --deployDirectory [deployDirectory]", "Deploy directory")
   	.action(_.partial(init, colors));
 
 // run command
@@ -29,4 +31,16 @@ program
   	.description("Run project on edison")
   	.action(_.partial(run, colors));
 
+// deploy command
+program
+  	.command("deploy")
+  	.description("Deploy project to edison")
+  	.action(_.partial(deploy, colors));
+
 program.parse(process.argv);
+
+// info
+//console.log(colors.white("Simple command line tool for deploy"));
+//console.log(colors.white("and run projects on"), colors.cyan("Intel Edison."));
+//console.log(colors.white("Use --help for more options."));
+//console.log(colors.white("v0.0.1"));
