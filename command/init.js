@@ -9,13 +9,17 @@ module.exports = function(colors, options) {
 	var username = options.username || config.USERNAME,
 		password = options.password || config.PASSWORD,
 		host = options.host || config.HOST,
-		port = options.port || config.PORT;
+		port = options.port || config.PORT,
+		projectName = options.projectName || config.PROJECT_NAME,
+		mainFile = options.main || config.MAIN_FILE;
 	
 	var settings = {
 		username: username,
 		password: password,
 		host: host,
-		port: port
+		port: port,
+		projectName: projectName,
+		mainFile: mainFile
 	};
 
 	jsonfile.writeFile(config.CONFIG_FILE, settings, function (err) {

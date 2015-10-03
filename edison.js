@@ -19,6 +19,8 @@ program
 	.option("-p, --password [password]", "Password")
 	.option("-h, --host [host]", "Host")
 	.option("-port, --port [port]", "Port")
+	.option("-pN, --projectName [projectName]", "Project name")
+	.option("-m, --main [main]", "Main file")
   	.action(_.partial(init, colors));
 
 // run command

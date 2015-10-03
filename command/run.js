@@ -1,5 +1,5 @@
 var sequest = require("sequest"),
-	jsonfile = require('jsonfile'),
+	jsonfile = require("jsonfile"),
 	config = require("../config/config");
 
 module.exports = function(colors, options) {
@@ -12,17 +12,26 @@ module.exports = function(colors, options) {
 			
 			var userHostInfo = settings.username + "@" + settings.host;
 			
-			sequest(userHostInfo, 
-				{
-					command: 'ls',
-					password: settings.password
-				}, 
-				function (err, stdout) {
-					err 
-						? console.log(colors.red(err))
-						: console.log(stdout);
+			var seq = sequest.connect(userHostInfo, {
+				password: settings.password
+			});
+			
+			// relatively /home/root
+			seq("cd " + settings.projectName, function(err, stdout) {
+				if(err) {
+					console.log(colors.red(err));
+				} else {
+					seq("node " + settings.mainFile, function(err, stdout) {
+						if(err) {
+							console.log(colors.red(err));	
+						} else {
+							console.log(colors.green("Project started."));
+							console.log(colors.green(stdout));
+							seq.end(); // terminate?
+						}
+					});
 				}
-			);		
+			});
 		}
 	});
 }
