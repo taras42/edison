@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 
-var fs = require('fs'),
+var _ = require("underscore"),
 	sequest = require("sequest"),
-	program = require("commander");
+	program = require("commander"),
+	colors = require("colors/safe");
+
+// colors
+colors.enabled = true;
 
 // commands
-
-var init = require('./command/init');
+var init = require("./command/init");
 
 program
   	.command("init")
@@ -15,6 +18,6 @@ program
 	.option("-p, --password [password]", "Password")
 	.option("-h, --host [host]", "Host")
 	.option("-port, --port [port]", "Port")
-  	.action(init);
+  	.action(_.partial(init, colors));
 
 program.parse(process.argv);
