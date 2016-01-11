@@ -3,7 +3,9 @@
     "password": "intel_edison",
     "host": "192.168.2.15",
     "port": "22",
-    "projectName": "./",
     "mainFile": "edison.js",
-    "deployDirectory": "./"
+    "deployDirectory": "./",
+	"exclude": [
+		"1"
+	]
 }

@@ -13,7 +13,10 @@ module.exports = function(colors, options) {
 		port: options.port || config.PORT,
 		projectName: options.projectName || config.PROJECT_NAME,
 		mainFile: options.mainFile || config.MAIN_FILE,
-		deployDirectory: options.deployDirectory || config.DEPLOY_DIRECTORY
+		deployDirectory: options.deployDirectory || config.DEPLOY_DIRECTORY,
+		exclude: options.exclude 
+			?  options.exclude.split(",") 
+		    :  config.EXCLUDE
 	};
 
 	jsonfile.writeFile(config.CONFIG_FILE, settings, function (err) {

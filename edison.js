@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var _ = require("underscore"),
+	path = require("path"),
 	program = require("commander"),
 	colors = require("colors/safe");
 
@@ -23,6 +24,7 @@ program
 	.option("-pN, --projectName [projectName]", "Project name")
 	.option("-mF, --mainFile [mainFile]", "Main file")
 	.option("-dD, --deployDirectory [deployDirectory]", "Deploy directory")
+	.option("-e, --exclude [exclude]", "Exclude")
   	.action(_.partial(init, colors));
 
 // run command
