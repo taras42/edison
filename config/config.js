@@ -15,5 +15,7 @@ module.exports = {
 	EXCLUDE: [
 		"node_modules"
 	],
-	RUN_COMMAND: "node"
+	RUN_COMMAND: "node",
+	CD_DIR_COMMAND: "cd",
+	MKDIR_COMMAND: "mkdir",
 }

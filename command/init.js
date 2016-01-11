@@ -1,5 +1,6 @@
 var jsonfile = require("jsonfile"),
-	config = require("../config/config");
+	config = require("../config/config"),
+	deferrize = require("../util/deferrize");
 
 jsonfile.spaces = config.JSON_FILE_SPACES;
 
@@ -14,11 +15,13 @@ module.exports = function(colors, options) {
 		projectName: options.projectName || config.PROJECT_NAME,
 		mainFile: options.mainFile || config.MAIN_FILE,
 		deployDirectory: options.deployDirectory || config.DEPLOY_DIRECTORY
-	};
-
-	jsonfile.writeFile(config.CONFIG_FILE, settings, function (err) {
-	  err 
-		? console.error(colors.red(err)) 
-	  	: console.log(colors.green("Configuration file created successfully."));
-	});	  
+	},
+		writeJSONFile = deferrize(jsonfile.writeFile, 0);
+	
+	
+	writeJSONFile(config.CONFIG_FILE, settings).done(function() {
+		console.log(colors.green("Configuration file successfully created."));
+	}, function(err) {
+		console.error(colors.red(err));
+	});
 }
