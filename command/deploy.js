@@ -1,10 +1,10 @@
 var sequest = require("sequest"),
 	_ = require("underscore"),
-	read = require('fs-readdir-recursive')
+	read = require("fs-readdir-recursive")
 	deferred = require("deferred"),
 	jsonfile = require("jsonfile"),
 	config = require("../config/config"),
-	path = require('path'),
+	path = require("path"),
 	fs = require("fs");
 
 // separator
