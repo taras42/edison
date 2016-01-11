@@ -13,15 +13,12 @@ module.exports = function(colors, options) {
 		port: options.port || config.PORT,
 		projectName: options.projectName || config.PROJECT_NAME,
 		mainFile: options.mainFile || config.MAIN_FILE,
-		deployDirectory: options.deployDirectory || config.DEPLOY_DIRECTORY,
-		exclude: options.exclude 
-			?  options.exclude.split(",") 
-		    :  config.EXCLUDE
+		deployDirectory: options.deployDirectory || config.DEPLOY_DIRECTORY
 	};
 
 	jsonfile.writeFile(config.CONFIG_FILE, settings, function (err) {
 	  err 
 		? console.error(colors.red(err)) 
-	  	: console.log(colors.green("Config file created successfully."));
+	  	: console.log(colors.green("Configuration file created successfully."));
 	});	  
 }

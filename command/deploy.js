@@ -13,7 +13,7 @@ var separator = process.platform === config.PLATFORM.WIN32
 				: config.DEFAULT_SEPARATOR;
 
 // copy project to edison
-function copy(seq, files, cwd, colors, target, dfd, index) {
+function _copy(seq, files, cwd, colors, target, dfd, index) {
 	index = index || 0;
 	
 	if (index >= files.length) {
@@ -32,12 +32,12 @@ function copy(seq, files, cwd, colors, target, dfd, index) {
 
 		writer.on('close', function () {
 			console.log(colors.green(fullFilePath + " copied."));
-			copy(seq, files, cwd, colors, target, dfd, index + 1);
+			_copy(seq, files, cwd, colors, target, dfd, index + 1);
 		});	
 	});
 }
 
-function copyFn(seq, settings, colors) {
+function copy(seq, settings, colors) {
 	var dfd = deferred(),
 		cwd = process.cwd(),
 		files = read(cwd),
@@ -48,7 +48,7 @@ function copyFn(seq, settings, colors) {
 			console.log(colors.red(stdout));
 		}
 		
-		copy(seq, files, cwd, colors, target, dfd);
+		_copy(seq, files, cwd, colors, target, dfd);
 	});
 	
 	return dfd.promise;
@@ -76,7 +76,7 @@ function deploy(colors, options) {
 				if(err) {
 					console.log(colors.red(err));
 				} else {
-					copyFn(seq, settings, colors).done(function() {
+					copy(seq, settings, colors).done(function() {
 						console.log(colors.green("Deploy successful."));
 						seq.end();
 					});

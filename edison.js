@@ -24,7 +24,6 @@ program
 	.option("-pN, --projectName [projectName]", "Project name")
 	.option("-mF, --mainFile [mainFile]", "Main file")
 	.option("-dD, --deployDirectory [deployDirectory]", "Deploy directory")
-	.option("-e, --exclude [exclude]", "Exclude")
   	.action(_.partial(init, colors));
 
 // run command

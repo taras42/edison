@@ -5,38 +5,37 @@ var sequest = require("sequest"),
 module.exports = function(colors, options) {
 	options = options || {};
 	
+	var userHostInfo,
+		seq,
+		projectDir,
+		runCommand;
+	
 	jsonfile.readFile(config.CONFIG_FILE, function(err, settings) {
   		if(err) {
 			console.log(colors.red(err));
 		} else {
 			
-			var userHostInfo = settings.username + "@" + settings.host;
+			userHostInfo = settings.username + "@" + settings.host;
 			
-			var seq = sequest.connect(userHostInfo, {
+			seq = sequest.connect(userHostInfo, {
 				password: settings.password
 			});
 			
+			projectDir = settings.deployDirectory + config.DEFAULT_SEPARATOR + settings.projectName;
+			runCommand = config.RUN_COMMAND + " " + projectDir + config.DEFAULT_SEPARATOR + settings.mainFile;
+			
 			// relatively /home/root
-			// spagetti, refactor needed
-			seq("cd " + settings.deployDirectory, function(err, stdout) {
+			seq(runCommand, function(err, stdout) {
 				if(err) {
 					console.log(colors.red(err));
 				} else {
-					seq("cd " + settings.projectName, function(err, stdout) {
-						if(err) {
-							console.log(colors.red(err));
-						} else {
-							seq("node " + settings.mainFile, function(err, stdout) {
-								if(err) {
-									console.log(colors.red(err));	
-								} else {
-									console.log(colors.green("Project started."));
-									console.log(colors.green(stdout));
-									seq.end(); // terminate?
-								}
-							});
-						}
-					});
+					if(err) {
+						console.log(colors.red(err));	
+					} else {
+						console.log(colors.green("Project started."));
+						console.log(colors.green(stdout));
+						seq.end(); // terminate?
+					}
 				}
 			});
 		}

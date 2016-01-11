@@ -14,5 +14,6 @@ module.exports = {
 	},
 	EXCLUDE: [
 		"node_modules"
-	]
+	],
+	RUN_COMMAND: "node"
 }
