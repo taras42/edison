@@ -37,68 +37,37 @@ function copy(seq, files, cwd, colors, target, dfd, index) {
 	});
 }
 
-// clean up project on edison
-function cleanUp(seq, settings, colors, target) {
-	var dfd = deferred(),
-		excludeArray = _.map(settings.exclude, function(exclude) {
-			return new RegExp("\/" + exclude); // for now
-		}),
-		filesToRemove;
-
-	
-	seq("find ./" + target + " -depth", function(err, stdout) {
-		var splitedSTD = stdout.split("\n");
-		
-		filesToRemove = _.filter(splitedSTD.slice(0, splitedSTD.length - 1), function(file) {
-			return !_.find(excludeArray, function(regexp) {
-				return file.match(regexp);
-			});
-		});
-		
-		dfd.resolve();
-	});
-	
-	return dfd.promise;
-}
-
 function copyFn(seq, settings, colors) {
-	var dfd = deferred();
-	var cwd = process.cwd();
-	
-	// filter what's in exclude
-	var files = read(cwd, function(filePath) {
-		return !_.find(config.EXCLUDE, function(exclude) {
-			return filePath.match(exclude);
-		});	
-	});
-	
-	var target = config.PROJECT_NAME;
+	var dfd = deferred(),
+		cwd = process.cwd(),
+		files = read(cwd),
+		target = config.PROJECT_NAME;
 	
 	seq("mkdir " + target, function(err, stdout) {
 		if (err) {
 			console.log(colors.red(stdout));
-			console.log(colors.green("Project will be copied to existing folder"));
 		}
 		
-		cleanUp(seq, settings, colors, target).done(function() {
-			copy(seq, files, cwd, colors, target, dfd);
-		});
+		copy(seq, files, cwd, colors, target, dfd);
 	});
 	
 	return dfd.promise;
 }
 
-module.exports = function(colors, options) {
+function deploy(colors, options) {
 	options = options || {};
+	
+	var userHostInfo,
+		seq;
 	
 	jsonfile.readFile(config.CONFIG_FILE, function(err, settings) {
   		if(err) {
 			console.log(colors.red(err));
 		} else {
 			
-			var userHostInfo = settings.username + "@" + settings.host;
+			userHostInfo = settings.username + "@" + settings.host;
 			
-			var seq = sequest.connect(userHostInfo, {
+			seq = sequest.connect(userHostInfo, {
 				password: settings.password
 			});
 			
@@ -116,3 +85,5 @@ module.exports = function(colors, options) {
 		}
 	});
 }
+
+module.exports = deploy;
