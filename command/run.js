@@ -14,8 +14,8 @@ module.exports = function(colors, options) {
 	
 	readJSONFile(config.CONFIG_FILE).done(function(settings) {
 		
-		projectDir = settings.deployDirectory + config.DEFAULT_SEPARATOR + settings.projectName;
-		runCommand = config.RUN_COMMAND + " " + projectDir + config.DEFAULT_SEPARATOR + settings.mainFile;
+		var projectDir = settings.deployDirectory + config.DEFAULT_SEPARATOR + settings.projectName,
+			runCommand = config.RUN_COMMAND + " " + projectDir + config.DEFAULT_SEPARATOR + settings.mainFile;
 		
 		connExecuteCommand = deferrize(_.bind(conn.exec, conn), 0);
 		

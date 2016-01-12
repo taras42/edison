@@ -11,7 +11,8 @@ colors.enabled = true;
 // commands
 var init = require("./command/init"),
 	run = require("./command/run"),
-	deploy = require("./command/deploy");
+	deploy = require("./command/deploy"),
+	execute = require("./command/execute");
 
 // init command
 program
@@ -37,6 +38,12 @@ program
   	.command("deploy")
   	.description("Deploy project to edison")
   	.action(_.partial(deploy, colors));
+
+// execute command
+program
+  	.command("execute command")
+  	.description("Execute custom command")
+  	.action(_.partial(execute, colors));
 
 program.parse(process.argv);
 
