@@ -6,31 +6,46 @@ var _ = require("underscore"),
 
 module.exports = function(colors, command) {
 	
-	var projectDir,
-		conn = new ssh2.Client(),
+	var conn = new ssh2.Client(),
 		readJSONFile = deferrize(jsonfile.readFile, 0);
 
 	if (_.isString(command)) {
 		readJSONFile(config.CONFIG_FILE).done(function(settings) {
 			
 			conn.on("ready", function() {
-				var cdToProject = config.CD_DIR_COMMAND + " " + settings.deployDirectory + config.DEFAULT_SEPARATOR + settings.projectName,
-					connExecuteCommand = deferrize(_.bind(conn.exec, conn), 0);
+				var cdToProjectDir = config.CD_DIR_COMMAND + " " + settings.deployDirectory 
+					+ config.DEFAULT_SEPARATOR 
+					+ settings.projectName;
 
-				connExecuteCommand(cdToProject).done(function() {
-					connExecuteCommand(command).done(function(stream) {
-						stream.on('close', function() {
-							conn.end();
-						}).on('data', function(data) {
-							console.log(data.toString());
-						}).stderr.on('data', function(data) {
-							console.log(data.toString());
-						});			
-					}, function(err) {
+				conn.shell(function(err, stream) {
+					var output = "",
+						skipFirstBuffer = true;
+					
+					if (err) {
 						console.log(colors.red(err));
+						return;
+					}
+					
+					stream.on('close', function() {
+						// TODO: format output
+						console.log(output);
+						conn.end();
+					}).on('data', function(data) {
+						// first buffer contains our commands, need to skip it.
+						if (skipFirstBuffer) {
+							skipFirstBuffer = false;
+							return;
+						}
+						
+						// collect chanks of data.
+						output += data.toString();
+					}).stderr.on('data', function(data) {
+						console.log(data.toString());
 					});
-				}, function(err) {
-					console.log(colors.red(err));
+					
+					stream.write(cdToProjectDir + "\n");
+					stream.write(command + "\n");
+					stream.end("exit\n");
 				});
 			});
 
