@@ -13,9 +13,7 @@ module.exports = function(colors, command) {
 		readJSONFile(config.CONFIG_FILE).done(function(settings) {
 			
 			conn.on("ready", function() {
-				var cdToProjectDir = config.CD_DIR_COMMAND + " " + settings.deployDirectory 
-					+ config.DEFAULT_SEPARATOR 
-					+ settings.projectName;
+				var cdToProjectDir = config.CD_DIR_COMMAND + " " + settings.projectName;
 
 				conn.shell(function(err, stream) {
 					var output = "",

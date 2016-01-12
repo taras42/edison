@@ -62,7 +62,7 @@ function copy(conn, settings, colors) {
 	var dfd = deferred(),
 		cwd = process.cwd(),
 		files = read(cwd),
-		target = config.PROJECT_NAME,
+		target = settings.projectName || config.PROJECT_NAME,
 		command = config.MKDIR_COMMAND + " " + target;
 	
 	connExecuteCommand(command).done(function() {
@@ -78,22 +78,16 @@ function deploy(colors, options) {
 	options = options || {};
 	
 	var conn = new ssh2.Client(),
-		command,
 		readJSONFile = deferrize(jsonfile.readFile, 0);
 	
 	readJSONFile(config.CONFIG_FILE).done(function(settings) {
 		
 		connExecuteCommand = deferrize(_.bind(conn.exec, conn), 0);
-		command = config.CD_DIR_COMMAND + " " + settings.deployDirectory;
 		
 		conn.on('ready', function() {
-			connExecuteCommand(command).done(function(stream) {
-				copy(conn, settings, colors).done(function() {
-					console.log(colors.green("Deploy finished."));
-					conn.end();
-				});
-			}, function(err) {
-				console.log(err);
+			copy(conn, settings, colors).done(function() {
+				console.log(colors.green("Deploy finished."));
+				conn.end();
 			});
 		});
 		

@@ -8,7 +8,6 @@ module.exports = {
 	PORT: "22",
 	PROJECT_NAME: "edison_project",
 	MAIN_FILE: "index.js",
-	DEPLOY_DIRECTORY: "./",
 	PLATFORM: {
 		WIN32: "win32"
 	},

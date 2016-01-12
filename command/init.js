@@ -13,8 +13,7 @@ module.exports = function(colors, options) {
 		host: options.host || config.HOST,
 		port: options.port || config.PORT,
 		projectName: options.projectName || config.PROJECT_NAME,
-		mainFile: options.mainFile || config.MAIN_FILE,
-		deployDirectory: options.deployDirectory || config.DEPLOY_DIRECTORY
+		mainFile: options.mainFile || config.MAIN_FILE
 	},
 		writeJSONFile = deferrize(jsonfile.writeFile, 0);
 	
