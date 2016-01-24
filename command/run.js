@@ -1,20 +1,18 @@
 var _ = require("underscore"),
 	ssh2 = require("ssh2"),
-	jsonfile = require("jsonfile"),
 	config = require("../config/config"),
-	deferrize = require("../util/deferrize");
+	deferrize = require("../util/deferrize"),
+	settings = require("../util/settings");
 
 module.exports = function(colors, options) {
 	options = options || {};
 	
 	var projectDir,
 		conn = new ssh2.Client(),
-		readJSONFile = deferrize(jsonfile.readFile, 0),
 		connExecuteCommand;
 	
-	readJSONFile(config.CONFIG_FILE).done(function(settings) {
-		
-		var runCommand = config.RUN_COMMAND + " " + settings.projectName + config.DEFAULT_SEPARATOR + settings.mainFile;
+	settings().done(function(settingsObj) {
+		var runCommand = config.RUN_COMMAND + " " + settingsObj.projectName + config.DEFAULT_SEPARATOR + settingsObj.mainFile;
 		
 		connExecuteCommand = deferrize(_.bind(conn.exec, conn), 0);
 		
@@ -33,12 +31,11 @@ module.exports = function(colors, options) {
 		});
 		
 		conn.connect({
-			host: settings.host,
-			port: settings.port,
-			username: settings.username,
-			password: settings.password
+			host: settingsObj.host,
+			port: settingsObj.port,
+			username: settingsObj.username,
+			password: settingsObj.password
 		});
-		
 	}, function(err) {
 		console.log(colors.red(err));
 	});
