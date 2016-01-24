@@ -1,7 +1,7 @@
 var _ = require("underscore"),
 	ssh2 = require("ssh2"),
-	jsonfile = require("jsonfile"),
 	config = require("../config/config"),
+	settings = require("../util/settings"),
 	deferrize = require("../util/deferrize");
 
 module.exports = function(colors, command) {
@@ -10,8 +10,8 @@ module.exports = function(colors, command) {
 		readJSONFile = deferrize(jsonfile.readFile, 0);
 
 	if (_.isString(command)) {
-		readJSONFile(config.CONFIG_FILE).done(function(settings) {
-			
+		
+		settings().done(function(settingsObj) {
 			conn.on("ready", function() {
 				var cdToProjectDir = config.CD_DIR_COMMAND + " " + settings.projectName;
 
@@ -48,12 +48,11 @@ module.exports = function(colors, command) {
 			});
 
 			conn.connect({
-				host: settings.host,
-				port: settings.port,
-				username: settings.username,
-				password: settings.password
+				host: settingsObj.host,
+				port: settingsObj.port,
+				username: settingsObj.username,
+				password: settingsObj.password
 			});
-		
 		}, function(err) {
 			console.log(colors.red(err));
 		});

@@ -1,11 +1,11 @@
-var ssh2 = require("ssh2"),
-	_ = require("underscore"),
+var _ = require("underscore"),
+	ssh2 = require("ssh2"),
 	read = require("fs-readdir-recursive")
 	deferred = require("deferred"),
-	jsonfile = require("jsonfile"),
 	config = require("../config/config"),
 	path = require("path"),
 	fs = require("fs"),
+	settings = require("../util/settings"),
 	deferrize = require("../util/deferrize");
 
 // separator
@@ -77,25 +77,24 @@ function copy(conn, settings, colors) {
 function deploy(colors, options) {
 	options = options || {};
 	
-	var conn = new ssh2.Client(),
-		readJSONFile = deferrize(jsonfile.readFile, 0);
+	var conn = new ssh2.Client();
 	
-	readJSONFile(config.CONFIG_FILE).done(function(settings) {
+	settings().done(function(settingsObj) {
 		
 		connExecuteCommand = deferrize(_.bind(conn.exec, conn), 0);
 		
 		conn.on('ready', function() {
-			copy(conn, settings, colors).done(function() {
+			copy(conn, settingsObj, colors).done(function() {
 				console.log(colors.green("Deploy finished."));
 				conn.end();
 			});
 		});
 		
 		conn.connect({
-			host: settings.host,
-			port: settings.port,
-			username: settings.username,
-			password: settings.password
+			host: settingsObj.host,
+			port: settingsObj.port,
+			username: settingsObj.username,
+			password: settingsObj.password
 		});
 	}, function(err) {
 		console.log(colors.red(err));
